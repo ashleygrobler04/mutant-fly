@@ -100,13 +100,10 @@ gameArea.addEventListener("click", (e) => {
     person.score += 1;
     person.moveTime -= random(10, 25);
   } else {
-    alert("Too early or too late");
+    alert("Too early.");
   }
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "a") alert(person.x);
-});
 start.showModal();
 gameOver=true;
 btnStart.addEventListener("click", (e) => {
