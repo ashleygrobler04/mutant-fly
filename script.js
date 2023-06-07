@@ -84,6 +84,7 @@ function resetGame() {
   gameOver = false;
   fly.x = random(5, 15);
   person.x = 0;
+  person.moveTime=680;
   timer.resume();
   snd.play();
   frameId = requestAnimationFrame(gameLoop);
