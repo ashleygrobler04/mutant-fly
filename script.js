@@ -93,7 +93,7 @@ function resetGame() {
 
 function isGameOver() {
   if (collide(person, fly)) {
-    showResults(`Game over. You managed to scare away ${person.score} flies.\nClicking close will restart the game.`);
+    showResults(`Game over. You managed to scare the fly away ${person.score} times.\nClicking close will restart the game.`);
     cancelAnimationFrame(frameId);
     timer.pause();
     snd.pause();
