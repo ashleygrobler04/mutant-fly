@@ -64,12 +64,34 @@ const collide = (obj1, obj2) => obj1.x === obj2.x;
 
 let timer = new Timer();
 const person = new Player(0);
-const fly = new Fly(10);
+const fly = new Fly(random(7, 20));
 let gameOver = false;
+
+function showResults(text) {
+  const gameOverDialog = document.getElementById("game-over");
+  const contents = document.getElementById("content");
+  const btnClose = document.getElementById("btn-close");
+  contents.innerHTML = "";
+  contents.innerHTML = text;
+  gameOverDialog.showModal();
+  btnClose.addEventListener("click", (e) => {
+    gameOverDialog.close();
+    resetGame();
+  });
+}
+
+function resetGame() {
+  gameOver = false;
+  fly.x = random(5, 15);
+  person.x = 0;
+  timer.resume();
+  snd.play();
+  frameId = requestAnimationFrame(gameLoop);
+}
 
 function isGameOver() {
   if (collide(person, fly)) {
-    alert(`Game over. You managed to scare ${person.score} flies away.`);
+    showResults(`Game over. You managed to scare away ${person.score} flies.\nClicking close will restart the game.`);
     cancelAnimationFrame(frameId);
     timer.pause();
     snd.pause();
@@ -86,7 +108,7 @@ function gameLoop() {
     if (timer.elapsed >= person.moveTime) {
       person.x += 1;
       isGameOver();
-      snd.currentTime=0;
+      snd.currentTime = 0;
       snd.play();
       timer.restart();
     }
@@ -106,10 +128,10 @@ gameArea.addEventListener("click", (e) => {
 });
 
 start.showModal();
-gameOver=true;
+gameOver = true;
 btnStart.addEventListener("click", (e) => {
-    jumpSnd.play();
-    gameOver=false;
-    start.close();
-  });
+  jumpSnd.play();
+  gameOver = false;
+  start.close();
+});
 frameId = requestAnimationFrame(gameLoop);
