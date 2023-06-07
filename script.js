@@ -85,10 +85,11 @@ function resetGame() {
   fly.x = random(5, 15);
   person.x = 0;
   person.moveTime=680;
+  person.score=0;
   timer.resume();
   snd.play();
   frameId = requestAnimationFrame(gameLoop);
-}
+  }
 
 function isGameOver() {
   if (collide(person, fly)) {
