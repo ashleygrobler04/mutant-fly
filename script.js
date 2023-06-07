@@ -48,7 +48,7 @@ class GameObject {
 class Player extends GameObject {
   constructor(x) {
     super(x);
-    this.moveTime = 800;
+    this.moveTime = 680;
     this.score = 0;
   }
 }
