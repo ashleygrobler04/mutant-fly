@@ -86,6 +86,7 @@ function gameLoop() {
     if (timer.elapsed >= person.moveTime) {
       person.x += 1;
       isGameOver();
+      snd.currentTime=0;
       snd.play();
       timer.restart();
     }
