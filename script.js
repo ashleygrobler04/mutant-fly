@@ -6,6 +6,8 @@ let frameId;
 const snd = new Audio("./step.mp3");
 const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
+const badHitSnd = new Audio("./buzz.mp3");
+
 
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -67,6 +69,13 @@ const person = new Player(0);
 const fly = new Fly(random(7, 20));
 let gameOver = false;
 
+function render_message(msg) {
+  const lr = "alerts"
+   document.getElementById(lr).innerHTML = "";
+  document.getElementById(lr).textContent = msg;
+
+}
+
 function showResults(text) {
   const gameOverDialog = document.getElementById("game-over");
   const contents = document.getElementById("content");
@@ -123,9 +132,12 @@ gameArea.addEventListener("click", (e) => {
     jumpSnd.play();
     fly.x += random(5, 20);
     person.score += 1;
+    if ((person.score % 5) === 0) {
+      render_message(`Score: ${person.score}`);
+    }
     person.moveTime -= random(10, 25);
   } else {
-    alert("Too early.");
+    badHitSnd.play();
   }
 });
 
