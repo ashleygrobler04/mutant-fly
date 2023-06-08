@@ -8,7 +8,6 @@ const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
 const badHitSnd = new Audio("./buzz.mp3");
 
-
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -70,10 +69,9 @@ const fly = new Fly(random(7, 20));
 let gameOver = false;
 
 function render_message(msg) {
-  const lr = "alerts"
-   document.getElementById(lr).innerHTML = "";
+  const lr = "alerts";
+  document.getElementById(lr).innerHTML = "";
   document.getElementById(lr).textContent = msg;
-
 }
 
 function showResults(text) {
@@ -93,20 +91,23 @@ function resetGame() {
   gameOver = false;
   fly.x = random(5, 15);
   person.x = 0;
-  person.moveTime=680;
-  person.score=0;
+  person.moveTime = 680;
+  person.score = 0;
   timer.resume();
   snd.play();
   frameId = requestAnimationFrame(gameLoop);
-  }
+}
 
 function isGameOver() {
   if (collide(person, fly)) {
-    showResults(`Game over. You managed to scare the fly away ${person.score} times.\nClicking close will restart the game.`);
+    showResults(
+      `Game over. You managed to scare the fly away ${person.score} times.\nClicking close will restart the game.`
+    );
     cancelAnimationFrame(frameId);
     timer.pause();
     snd.pause();
     gameOver = true;
+    render_message("");
   }
   if (person.x === fly.x - 2) {
     closeSnd.play();
@@ -132,7 +133,7 @@ gameArea.addEventListener("click", (e) => {
     jumpSnd.play();
     fly.x += random(5, 20);
     person.score += 1;
-    if ((person.score % 5) === 0) {
+    if (person.score % 5 === 0) {
       render_message(`Score: ${person.score}`);
     }
     person.moveTime -= random(10, 25);
