@@ -3,6 +3,10 @@ const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
 
 let frameId;
+let speakScoreInterval;
+const speakScoreIntervalInput = document.getElementById(
+  "speak-score-interval-input"
+);
 const snd = new Audio("./step.mp3");
 const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
@@ -129,11 +133,13 @@ function gameLoop() {
 }
 
 gameArea.addEventListener("click", (e) => {
+  speakScoreInterval = Number(speakScoreIntervalInput.value) || 5;
+
   if (fly.x - person.x <= 2) {
     jumpSnd.play();
     fly.x += random(5, 20);
     person.score += 1;
-    if (person.score % 5 === 0) {
+    if (person.score % speakScoreInterval === 0) {
       render_message(`Score: ${person.score}`);
     }
     person.moveTime -= random(10, 25);
