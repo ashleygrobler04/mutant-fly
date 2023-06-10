@@ -3,7 +3,9 @@ const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
 
 let frameId;
+let difficulty;
 let speakScoreInterval;
+const difficultyInput = document.getElementById("difficulty-input");
 const speakScoreIntervalInput = document.getElementById(
   "speak-score-interval-input"
 );
@@ -56,6 +58,11 @@ class Player extends GameObject {
     this.moveTime = 680;
     this.score = 0;
   }
+
+  getInitialSpeed() {
+    const speed_index = difficultyScalar().length - 1;
+    this.moveTime = difficultyScalar()[speed_index];
+  }
 }
 
 class Fly extends GameObject {
@@ -95,7 +102,7 @@ function resetGame() {
   gameOver = false;
   fly.x = random(5, 15);
   person.x = 0;
-  person.moveTime = 680;
+  person.getInitialSpeed();
   person.score = 0;
   timer.resume();
   snd.play();
@@ -105,7 +112,7 @@ function resetGame() {
 function isGameOver() {
   if (collide(person, fly)) {
     showResults(
-      `Game over. You managed to scare the fly away ${person.score} times.\nClicking close will restart the game.`
+      `Game over. You managed to scare the fly away ${person.score} times on difficulty level ${difficulty}.\nClicking close will restart the game.`
     );
     cancelAnimationFrame(frameId);
     timer.pause();
@@ -117,6 +124,36 @@ function isGameOver() {
     closeSnd.play();
   }
 }
+
+function difficultyScalar() {
+  let moveTimeMin = 5, moveTimeMax = 10, flyMinX = 5, flyMaxX = 20, startMoveSpeed = 680;
+
+  switch (difficulty) {
+    case "Medium":
+      moveTimeMin *= 2;
+      moveTimeMax *= 4;
+      flyMinX -= 1;
+      flyMaxX = Math.floor(flyMaxX * 1.75);
+      startMoveSpeed = 480;
+      break;
+    case "Hard":
+      moveTimeMin *= 6;
+      moveTimeMax = 8;
+      flyMinX -= 2;
+      flyMaxX = Math.floor(flyMaxX * 2.5);
+      startMoveSpeed = 340;
+      break;
+    default:
+      moveTimeMin *= 1;
+      moveTimeMax *= 1;
+      flyMinX *= 1;
+      flyMaxX *= 1;
+      startMoveSpeed *= 1;
+  }
+
+  return [moveTimeMin, moveTimeMax, flyMinX, flyMaxX, startMoveSpeed];
+}
+
 
 function gameLoop() {
   timer.update();
@@ -133,16 +170,17 @@ function gameLoop() {
 }
 
 gameArea.addEventListener("click", (e) => {
+  let [moveTimeMin, moveTimeMax, flyMinX, flyMaxX] = difficultyScalar();
   speakScoreInterval = Number(speakScoreIntervalInput.value) || 5;
 
   if (fly.x - person.x <= 2) {
     jumpSnd.play();
-    fly.x += random(5, 20);
+    fly.x += random(flyMinX, flyMaxX);
     person.score += 1;
     if (person.score % speakScoreInterval === 0) {
       render_message(`Score: ${person.score}`);
     }
-    person.moveTime -= random(10, 25);
+    person.moveTime -= random(moveTimeMin, moveTimeMax);
   } else {
     badHitSnd.play();
   }
@@ -151,6 +189,8 @@ gameArea.addEventListener("click", (e) => {
 start.showModal();
 gameOver = true;
 btnStart.addEventListener("click", (e) => {
+  difficulty = String(difficultyInput.value)
+  person.getInitialSpeed();
   jumpSnd.play();
   gameOver = false;
   start.close();
