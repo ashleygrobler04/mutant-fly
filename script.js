@@ -6,9 +6,12 @@ let frameId;
 let difficulty;
 let speakScoreInterval;
 const difficultyInput = document.getElementById("difficulty-input");
+const speakScoreIntervalLabel = document.getElementById("speak-score-interval-label");
 const speakScoreIntervalInput = document.getElementById(
   "speak-score-interval-input"
 );
+const speakScoreCheckbox = document.getElementById("speak-score-checkbox");
+
 const snd = new Audio("./step.mp3");
 const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
@@ -81,6 +84,16 @@ let gameOver = false;
 
 function focusGameArea() {
   return gameArea.focus();
+}
+
+function handleScoreInterval() {
+  if (!speakScoreCheckbox.checked) {
+    speakScoreIntervalLabel.style.display = "none";
+    speakScoreIntervalInput.style.display = "none";
+  } else {
+    speakScoreIntervalLabel.style.display = "block";
+    speakScoreIntervalInput.style.display = "block";
+  }
 }
 
 function render_message(msg) {
@@ -181,7 +194,7 @@ gameArea.addEventListener("click", (e) => {
     jumpSnd.play();
     fly.x += random(flyMinX, flyMaxX);
     person.score += 1;
-    if (person.score % speakScoreInterval === 0) {
+    if (speakScoreCheckbox.checked && person.score % speakScoreInterval === 0) {
       render_message(`Score: ${person.score}`);
     }
     person.moveTime -= random(moveTimeMin, moveTimeMax);

@@ -41,8 +41,10 @@
           <option value="Hard">Hard</option>
         </select>
         <br>
-        <label for="speak-score-interval-input">Speak score after how many points?</label><br>
-        <input type="number" id="speak-score-interval-input" min="1" max="20" value="5">
+        <input type="checkbox" id="speak-score-checkbox" onclick="handleScoreInterval()">
+        <label for="speak-score-checkbox" >Speak score periodically</label><br>
+        <label for="speak-score-interval-input" id="speak-score-interval-label" style="display: none;">Speak score after how many points?</label><br>
+        <input type="number" id="speak-score-interval-input" style="display: none;" min="1" max="20" value="5">
       </form>
       <button id="btn-start">start</button>
     </dialog>
