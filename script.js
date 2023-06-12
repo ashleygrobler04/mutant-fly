@@ -79,6 +79,10 @@ const person = new Player(0);
 const fly = new Fly(random(7, 20));
 let gameOver = false;
 
+function focusGameArea() {
+  return gameArea.focus();
+}
+
 function render_message(msg) {
   const lr = "alerts";
   document.getElementById(lr).innerHTML = "";
@@ -193,6 +197,7 @@ btnStart.addEventListener("click", (e) => {
   person.getInitialSpeed();
   jumpSnd.play();
   gameOver = false;
+  setTimeout(focusGameArea, 50);
   start.close();
 });
 frameId = requestAnimationFrame(gameLoop);
