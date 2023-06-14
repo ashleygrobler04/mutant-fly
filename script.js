@@ -40,9 +40,13 @@ class Map {
       this.tiles.push(type);
     }
   }
+
+  clear_platform() {
+    this.tiles=[]; //use this to clear the platform. Maybe when the game is over?
+  }
 }
 
-//map tests
+//map tests 
 // m = new Map();
 // m.add_platform(0, 4, "rock");
 // m.add_platform(5, 8, "grass");
