@@ -245,7 +245,7 @@ function gameLoop() {
       currentStepSound = getRandomStepSound();
       currentStepSound.currentTime = 0;
       currentStepSound.play();
-      m.get_tile_at(person.x);
+      //m.get_tile_at(person.x);
       timer.restart();
     }
   }
