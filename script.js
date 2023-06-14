@@ -12,7 +12,9 @@ const speakScoreIntervalInput = document.getElementById(
 );
 const speakScoreCheckbox = document.getElementById("speak-score-checkbox");
 
-const snd = new Audio("./step.mp3");
+const totalStepSounds = 5;
+let stepSounds = [];
+let currentStepSound;
 const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
 const badHitSnd = new Audio("./buzz.mp3");
@@ -102,6 +104,27 @@ function render_message(msg) {
   document.getElementById(lr).textContent = msg;
 }
 
+function addStepSounds() {
+  for (let i = 1; i < totalStepSounds + 1; i++) {
+    stepSounds.push(
+      (function() {
+        const snd = new Audio("./step" + i + ".mp3");
+        return snd;
+      })()
+    );
+  }
+}
+
+function getRandomStepSound() {
+    const old_snd = currentStepSound;
+    let  snd = stepSounds[random(0, (totalStepSounds - 1))];
+    if (snd !== old_snd) {
+      return snd;
+    } else {
+      return getRandomStepSound();
+    }
+}
+
 function showResults(text) {
   const gameOverDialog = document.getElementById("game-over");
   const contents = document.getElementById("content");
@@ -122,7 +145,7 @@ function resetGame() {
   person.getInitialSpeed();
   person.score = 0;
   timer.resume();
-  snd.play();
+  currentStepSound.play();
   frameId = requestAnimationFrame(gameLoop);
 }
 
@@ -133,7 +156,7 @@ function isGameOver() {
     );
     cancelAnimationFrame(frameId);
     timer.pause();
-    snd.pause();
+    currentStepSound.pause();
     gameOver = true;
     render_message("");
   }
@@ -178,8 +201,9 @@ function gameLoop() {
     if (timer.elapsed >= person.moveTime) {
       person.x += 1;
       isGameOver();
-      snd.currentTime = 0;
-      snd.play();
+      currentStepSound = getRandomStepSound();
+      currentStepSound.currentTime = 0;
+      currentStepSound.play();
       timer.restart();
     }
   }
@@ -203,6 +227,7 @@ gameArea.addEventListener("click", (e) => {
   }
 });
 
+addStepSounds();
 start.showModal();
 gameOver = true;
 btnStart.addEventListener("click", (e) => {
