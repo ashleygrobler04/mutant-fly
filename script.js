@@ -31,7 +31,11 @@ class Map {
   }
 
   get_tile_at(x) {
-    return this.tiles[x];
+    if (x < this.tiles.length) {
+      return this.tiles[x];
+    } else {
+      return "";
+    }
   }
 
   add_platform(min_x, max_x, type) {
@@ -42,11 +46,11 @@ class Map {
   }
 
   clear_platform() {
-    this.tiles=[]; //use this to clear the platform. Maybe when the game is over?
+    this.tiles = []; //use this to clear the platform. Maybe when the game is over?
   }
 }
 
-//map tests 
+//map tests
 // m = new Map();
 // m.add_platform(0, 4, "rock");
 // m.add_platform(5, 8, "grass");
@@ -115,6 +119,8 @@ let timer = new Timer();
 const person = new Player(0);
 const fly = new Fly(random(7, 20));
 let gameOver = false;
+const m = new Map();
+m.add_platform(0, 10, "step");
 
 function focusGameArea() {
   return gameArea.focus();
@@ -239,6 +245,7 @@ function gameLoop() {
       currentStepSound = getRandomStepSound();
       currentStepSound.currentTime = 0;
       currentStepSound.play();
+      m.get_tile_at(person.x);
       timer.restart();
     }
   }
