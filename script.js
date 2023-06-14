@@ -6,7 +6,9 @@ let frameId;
 let difficulty;
 let speakScoreInterval;
 const difficultyInput = document.getElementById("difficulty-input");
-const speakScoreIntervalLabel = document.getElementById("speak-score-interval-label");
+const speakScoreIntervalLabel = document.getElementById(
+  "speak-score-interval-label"
+);
 const speakScoreIntervalInput = document.getElementById(
   "speak-score-interval-input"
 );
@@ -22,6 +24,32 @@ const badHitSnd = new Audio("./buzz.mp3");
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+class Map {
+  constructor() {
+    this.tiles = []; //holds all the tiles
+  }
+
+  get_tile_at(x) {
+    return this.tiles[x];
+  }
+
+  add_platform(min_x, max_x, type) {
+    //min_x: the left most position the platform should start at. max_x: the right most x the platform should end at. type: The type of the tile you want to play or want the user to be on. Has to be string.
+    for (let i = min_x; i <= max_x; i++) {
+      this.tiles.push(type);
+    }
+  }
+}
+
+//map tests
+// m = new Map();
+// m.add_platform(0, 4, "rock");
+// m.add_platform(5, 8, "grass");
+// m.add_platform(9, 12, "water");
+// m.tiles.forEach((v, i) =>
+//   console.log(`${v} at ${i} got value with ${m.get_tile_at(i)}`)
+// );
 
 class Timer {
   constructor() {
@@ -107,7 +135,7 @@ function render_message(msg) {
 function addStepSounds() {
   for (let i = 1; i < totalStepSounds + 1; i++) {
     stepSounds.push(
-      (function() {
+      (function () {
         const snd = new Audio("./step" + i + ".mp3");
         return snd;
       })()
@@ -116,13 +144,13 @@ function addStepSounds() {
 }
 
 function getRandomStepSound() {
-    const old_snd = currentStepSound;
-    let  snd = stepSounds[random(0, (totalStepSounds - 1))];
-    if (snd !== old_snd) {
-      return snd;
-    } else {
-      return getRandomStepSound();
-    }
+  const old_snd = currentStepSound;
+  let snd = stepSounds[random(0, totalStepSounds - 1)];
+  if (snd !== old_snd) {
+    return snd;
+  } else {
+    return getRandomStepSound();
+  }
 }
 
 function showResults(text) {
@@ -166,7 +194,11 @@ function isGameOver() {
 }
 
 function difficultyScalar() {
-  let moveTimeMin = 5, moveTimeMax = 10, flyMinX = 5, flyMaxX = 20, startMoveSpeed = 680;
+  let moveTimeMin = 5,
+    moveTimeMax = 10,
+    flyMinX = 5,
+    flyMaxX = 20,
+    startMoveSpeed = 680;
 
   switch (difficulty) {
     case "Medium":
@@ -193,7 +225,6 @@ function difficultyScalar() {
 
   return [moveTimeMin, moveTimeMax, flyMinX, flyMaxX, startMoveSpeed];
 }
-
 
 function gameLoop() {
   timer.update();
@@ -231,7 +262,7 @@ addStepSounds();
 start.showModal();
 gameOver = true;
 btnStart.addEventListener("click", (e) => {
-  difficulty = String(difficultyInput.value)
+  difficulty = String(difficultyInput.value);
   person.getInitialSpeed();
   jumpSnd.play();
   gameOver = false;
