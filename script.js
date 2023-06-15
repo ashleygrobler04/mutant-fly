@@ -1,29 +1,4 @@
-const gameArea = document.getElementById("area");
-const start = document.getElementById("start");
-const btnStart = document.getElementById("btn-start");
-
-let frameId;
-let difficulty;
-let speakScoreInterval;
-const difficultyInput = document.getElementById("difficulty-input");
-const speakScoreIntervalLabel = document.getElementById(
-  "speak-score-interval-label"
-);
-const speakScoreIntervalInput = document.getElementById(
-  "speak-score-interval-input"
-);
-const speakScoreCheckbox = document.getElementById("speak-score-checkbox");
-
-const totalStepSounds = 5;
-let stepSounds = [];
-let currentStepSound;
-const jumpSnd = new Audio("./jump.mp3");
-const closeSnd = new Audio("./close.mp3");
-const badHitSnd = new Audio("./buzz.mp3");
-
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+// Class definitions
 
 class Map {
   constructor() {
@@ -39,7 +14,6 @@ class Map {
   }
 
   add_platform(min_x, max_x, type) {
-    //min_x: the left most position the platform should start at. max_x: the right most x the platform should end at. type: The type of the tile you want to play or want the user to be on. Has to be string.
     for (let i = min_x; i <= max_x; i++) {
       this.tiles.push(type);
     }
@@ -49,15 +23,6 @@ class Map {
     this.tiles = []; //use this to clear the platform. Maybe when the game is over?
   }
 }
-
-//map tests
-// m = new Map();
-// m.add_platform(0, 4, "rock");
-// m.add_platform(5, 8, "grass");
-// m.add_platform(9, 12, "water");
-// m.tiles.forEach((v, i) =>
-//   console.log(`${v} at ${i} got value with ${m.get_tile_at(i)}`)
-// );
 
 class Timer {
   constructor() {
@@ -113,14 +78,13 @@ class Fly extends GameObject {
   }
 }
 
-const collide = (obj1, obj2) => obj1.x === obj2.x;
+// Function definitions
 
-let timer = new Timer();
-const person = new Player(0);
-const fly = new Fly(random(7, 20));
-let gameOver = false;
-const m = new Map();
-m.add_platform(0, 10, "step");
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+const collide = (obj1, obj2) => obj1.x === obj2.x;
 
 function focusGameArea() {
   return gameArea.focus();
@@ -245,12 +209,45 @@ function gameLoop() {
       currentStepSound = getRandomStepSound();
       currentStepSound.currentTime = 0;
       currentStepSound.play();
-      //m.get_tile_at(person.x);
       timer.restart();
     }
   }
   frameId = requestAnimationFrame(gameLoop);
 }
+
+//Constant and variable declarations
+
+const gameArea = document.getElementById("area");
+const start = document.getElementById("start");
+const btnStart = document.getElementById("btn-start");
+
+let frameId;
+let difficulty;
+let speakScoreInterval;
+const difficultyInput = document.getElementById("difficulty-input");
+const speakScoreIntervalLabel = document.getElementById(
+  "speak-score-interval-label"
+);
+const speakScoreIntervalInput = document.getElementById(
+  "speak-score-interval-input"
+);
+const speakScoreCheckbox = document.getElementById("speak-score-checkbox");
+
+const totalStepSounds = 5;
+let stepSounds = [];
+let currentStepSound;
+const jumpSnd = new Audio("./jump.mp3");
+const closeSnd = new Audio("./close.mp3");
+const badHitSnd = new Audio("./buzz.mp3");
+
+let timer = new Timer();
+const person = new Player(0);
+const fly = new Fly(random(7, 20));
+let gameOver = false;
+const m = new Map();
+m.add_platform(0, 10, "step");
+
+// Start game
 
 gameArea.addEventListener("click", (e) => {
   let [moveTimeMin, moveTimeMax, flyMinX, flyMaxX] = difficultyScalar();
