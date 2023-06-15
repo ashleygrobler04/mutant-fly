@@ -130,13 +130,17 @@ function getRandomStepSound() {
 function showResults(text) {
   const gameOverDialog = document.getElementById("game-over");
   const contents = document.getElementById("content");
-  const btnClose = document.getElementById("btn-close");
+  const btnPlayAgain = document.getElementById("btn-play-again");
+  const btnStartOver = document.getElementById("btn-start-new");
   contents.innerHTML = "";
   contents.innerHTML = text;
   gameOverDialog.showModal();
-  btnClose.addEventListener("click", (e) => {
+  btnPlayAgain.addEventListener("click", (e) => {
     gameOverDialog.close();
     resetGame();
+  });
+  btnStartOver.addEventListener("click", (e) => {
+    location.reload();
   });
 }
 
@@ -154,7 +158,7 @@ function resetGame() {
 function isGameOver() {
   if (collide(person, fly)) {
     showResults(
-      `Game over. You managed to scare the fly away ${person.score} times on difficulty level ${difficulty}.\nClicking close will restart the game.`
+      `Game over. You managed to scare the fly away ${person.score} times on difficulty level ${difficulty}.\nClicking \"Play again\" will start a new game with the same settings while clicking "Start over" will reload the page, allowing you to configure the game again.`
     );
     cancelAnimationFrame(frameId);
     timer.pause();
