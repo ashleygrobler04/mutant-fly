@@ -265,7 +265,7 @@ gameArea.addEventListener("click", (e) => {
   speakScoreInterval = Number(speakScoreIntervalInput.value) || 5;
 
   if (fly.x - person.x <= 2) {
-    jumpSnd.play();
+    play_sound("./jump.mp3");
     fly.x += random(flyMinX, flyMaxX);
     person.score += 1;
     if (speakScoreCheckbox.checked && person.score % speakScoreInterval === 0) {
@@ -273,7 +273,7 @@ gameArea.addEventListener("click", (e) => {
     }
     person.moveTime -= random(moveTimeMin, moveTimeMax);
   } else {
-    badHitSnd.play();
+    play_sound("./buzz.mp3");
   }
 });
 
