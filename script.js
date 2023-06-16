@@ -106,27 +106,6 @@ function render_message(msg) {
   document.getElementById(lr).textContent = msg;
 }
 
-function addStepSounds() {
-  for (let i = 1; i < totalStepSounds + 1; i++) {
-    stepSounds.push(
-      (function () {
-        const snd = new Audio("./step" + i + ".mp3");
-        return snd;
-      })()
-    );
-  }
-}
-
-function getRandomStepSound() {
-  const old_snd = currentStepSound;
-  let snd = stepSounds[random(0, totalStepSounds - 1)];
-  if (snd !== old_snd) {
-    return snd;
-  } else {
-    return getRandomStepSound();
-  }
-}
-
 function showResults(text) {
   const gameOverDialog = document.getElementById("game-over");
   const contents = document.getElementById("content");
@@ -162,12 +141,11 @@ function isGameOver() {
     );
     cancelAnimationFrame(frameId);
     timer.pause();
-    currentStepSound.pause();
     gameOver = true;
     render_message("");
   }
   if (person.x === fly.x - 2) {
-    closeSnd.play();
+    play_sound("./close.mp3");
   }
 }
 
@@ -210,9 +188,7 @@ function gameLoop() {
     if (timer.elapsed >= person.moveTime) {
       person.x += 1;
       isGameOver();
-      currentStepSound = getRandomStepSound();
-      currentStepSound.currentTime = 0;
-      currentStepSound.play();
+      play_sound(`./${m.get_tile_at(person.x)}${random(1,5)}.mp3`)
       timer.restart();
     }
   }
@@ -249,7 +225,6 @@ let stepSounds = [];
 let currentStepSound;
 const jumpSnd = new Audio("./jump.mp3");
 const closeSnd = new Audio("./close.mp3");
-const badHitSnd = new Audio("./buzz.mp3");
 
 let timer = new Timer();
 const person = new Player(0);
@@ -277,13 +252,12 @@ gameArea.addEventListener("click", (e) => {
   }
 });
 
-addStepSounds();
 start.showModal();
 gameOver = true;
 btnStart.addEventListener("click", (e) => {
   difficulty = String(difficultyInput.value);
   person.getInitialSpeed();
-  jumpSnd.play();
+  play_sound("./jump.mp3");
   gameOver = false;
   setTimeout(focusGameArea, 50);
   start.close();
