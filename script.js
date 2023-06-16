@@ -195,14 +195,23 @@ function gameLoop() {
 }
 
 function play_sound(path) {
+  var aud = new Audio();
   aud.src = path;
   aud.currentTime = 0;
-  aud.play();
+  audioElements.push(aud);
+  aud.play().then(function() {
+    // Remove the audio element from the array once it has finished playing
+    audioElements.splice(audioElements.indexOf(aud), 1);
+  }).catch(function(error) {
+    console.error('Failed to play sound:', error);
+    // Remove the audio element from the array if there's an error
+    audioElements.splice(audioElements.indexOf(aud), 1);
+  });
 }
 
 //Constant and variable declarations
 
-const aud = new Audio();
+let audioElements=[]; //This will be a list of audio objects.
 const gameArea = document.getElementById("area");
 const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
