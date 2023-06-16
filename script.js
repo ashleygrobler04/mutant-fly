@@ -219,8 +219,15 @@ function gameLoop() {
   frameId = requestAnimationFrame(gameLoop);
 }
 
+function play_sound(path) {
+  aud.src = path;
+  aud.currentTime = 0;
+  aud.play();
+}
+
 //Constant and variable declarations
 
+const aud = new Audio();
 const gameArea = document.getElementById("area");
 const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
