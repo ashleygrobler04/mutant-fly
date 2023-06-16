@@ -130,7 +130,6 @@ function resetGame() {
   person.getInitialSpeed();
   person.score = 0;
   timer.resume();
-  currentStepSound.play();
   frameId = requestAnimationFrame(gameLoop);
 }
 
@@ -219,19 +218,12 @@ const speakScoreIntervalInput = document.getElementById(
   "speak-score-interval-input"
 );
 const speakScoreCheckbox = document.getElementById("speak-score-checkbox");
-
-const totalStepSounds = 5;
-let stepSounds = [];
-let currentStepSound;
-const jumpSnd = new Audio("./jump.mp3");
-const closeSnd = new Audio("./close.mp3");
-
 let timer = new Timer();
 const person = new Player(0);
 const fly = new Fly(random(7, 20));
 let gameOver = false;
 const m = new Map();
-m.add_platform(0, 10, "step");
+m.add_platform(0, 10000, "step");
 
 // Start game
 
