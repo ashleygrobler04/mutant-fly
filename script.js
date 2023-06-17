@@ -198,7 +198,7 @@ function gameLoop() {
 }
 
 function play_sound(path) {
-  var aud = new Audio();
+  let aud = new Audio();
   aud.src = path;
   aud.currentTime = 0;
   audioElements.push(aud);
