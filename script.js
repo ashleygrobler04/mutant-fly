@@ -3,6 +3,8 @@
 class Map {
   constructor() {
     this.tiles = []; //holds all the tiles
+    this.maxVisibleTileAmount = random(0, 20); //max endless amount of tiles
+    this.tileTypes = ["concrete", "grass", "metal"]; //the tile types for use with the map.
   }
 
   get_tile_at(x) {
@@ -187,7 +189,8 @@ function gameLoop() {
     if (timer.elapsed >= person.moveTime) {
       person.x += 1;
       isGameOver();
-      play_sound(`./${m.get_tile_at(person.x)}${random(1,5)}.mp3`)
+      expandMap();
+      play_sound(`./${m.get_tile_at(person.x)}${random(1, 5)}.mp3`);
       timer.restart();
     }
   }
@@ -199,19 +202,34 @@ function play_sound(path) {
   aud.src = path;
   aud.currentTime = 0;
   audioElements.push(aud);
-  aud.play().then(function() {
-    // Remove the audio element from the array once it has finished playing
-    audioElements.splice(audioElements.indexOf(aud), 1);
-  }).catch(function(error) {
-    console.error('Failed to play sound:', error);
-    // Remove the audio element from the array if there's an error
-    audioElements.splice(audioElements.indexOf(aud), 1);
-  });
+  aud
+    .play()
+    .then(function () {
+      // Remove the audio element from the array once it has finished playing
+      audioElements.splice(audioElements.indexOf(aud), 1);
+    })
+    .catch(function (error) {
+      console.error("Failed to play sound:", error);
+      // Remove the audio element from the array if there's an error
+      audioElements.splice(audioElements.indexOf(aud), 1);
+    });
+}
+
+function expandMap() {
+  //This function is to endlessly expand the map.
+  if (person.x === m.maxVisibleTileAmount) {
+    m.maxVisibleTileAmount = random(person.x, person.x + 20);
+    m.add_platform(
+      person.x,
+      m.maxVisibleTileAmount,
+      m.tileTypes[random(0, m.tileTypes.length - 1)]
+    );
+  }
 }
 
 //Constant and variable declarations
 
-let audioElements=[]; //This will be a list of audio objects.
+let audioElements = []; //This will be a list of audio objects.
 const gameArea = document.getElementById("area");
 const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
@@ -232,8 +250,11 @@ const person = new Player(0);
 const fly = new Fly(random(7, 20));
 let gameOver = false;
 const m = new Map();
-m.add_platform(0, 10000, "step");
-
+m.add_platform(
+  person.x,
+  m.maxVisibleTileAmount,
+  m.tileTypes[random(0, m.tileTypes.length - 1)]
+);
 // Start game
 
 gameArea.addEventListener("click", (e) => {
