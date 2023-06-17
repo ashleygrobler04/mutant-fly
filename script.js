@@ -8,7 +8,7 @@ class Map {
   }
 
   get_tile_at(x) {
-    if (x < this.tiles.length) {
+    if (x <= this.tiles.length-1) {
       return this.tiles[x];
     } else {
       return "";
