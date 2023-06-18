@@ -3,7 +3,7 @@
 class Map {
   constructor() {
     this.tiles = []; //holds all the tiles
-    this.maxVisibleTileAmount = random(0, 20); //max endless amount of tiles
+    this.maxVisibleTileAmount = 20; //max endless amount of tiles
     this.tileTypes = ["concrete", "grass", "metal"]; //the tile types for use with the map.
   }
 
@@ -217,8 +217,8 @@ function play_sound(path) {
 
 function expandMap() {
   //This function is to endlessly expand the map.
-  if (person.x === m.maxVisibleTileAmount) {
-    m.maxVisibleTileAmount = random(person.x, person.x + 20);
+  if (m.maxVisibleTileAmount - person.x < 5) {
+    m.maxVisibleTileAmount = person.x + 20;
     m.add_platform(
       person.x,
       m.maxVisibleTileAmount,
