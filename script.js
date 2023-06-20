@@ -198,20 +198,19 @@ function gameLoop() {
 }
 
 function play_sound(path) {
-  let aud = new Audio();
-  aud.src = path;
-  aud.currentTime = 0;
-  audioElements.push(aud);
-  aud
-    .play()
-    .then(function () {
-      // Remove the audio element from the array once it has finished playing
-      audioElements.splice(audioElements.indexOf(aud), 1);
+  fetch(path)
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      return audioCtx.decodeAudioData(buffer);
     })
-    .catch(function (error) {
+    .then(audioBuffer => {
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      source.start(0);
+    })
+    .catch(error => {
       console.error("Failed to play sound:", error);
-      // Remove the audio element from the array if there's an error
-      audioElements.splice(audioElements.indexOf(aud), 1);
     });
 }
 
@@ -229,7 +228,7 @@ function expandMap() {
 
 //Constant and variable declarations
 
-let audioElements = []; //This will be a list of audio objects.
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const gameArea = document.getElementById("area");
 const start = document.getElementById("start");
 const btnStart = document.getElementById("btn-start");
