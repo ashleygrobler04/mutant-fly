@@ -8,7 +8,7 @@ class Map {
   }
 
   get_tile_at(x) {
-    if (x <= this.tiles.length-1) {
+    if (x <= this.tiles.length - 1) {
       return this.tiles[x];
     } else {
       return "";
@@ -197,21 +197,37 @@ function gameLoop() {
   frameId = requestAnimationFrame(gameLoop);
 }
 
-function play_sound(path) {
-  fetch(path)
-    .then(response => response.arrayBuffer())
-    .then(buffer => {
+function fetchAndDecodeAudio(path) {
+  return fetch(path)
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => {
       return audioCtx.decodeAudioData(buffer);
-    })
-    .then(audioBuffer => {
-      const source = audioCtx.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
-    })
-    .catch(error => {
-      console.error("Failed to play sound:", error);
     });
+}
+
+function play_sound(path) {
+  if (soundCache.hasOwnProperty(path)) {
+    // Sound is already cached, play it from the cache
+    const audioBuffer = soundCache[path];
+    playFromBuffer(audioBuffer);
+  } else {
+    // Fetch and decode the audio, then cache and play it
+    fetchAndDecodeAudio(path)
+      .then((audioBuffer) => {
+        soundCache[path] = audioBuffer;
+        playFromBuffer(audioBuffer);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch and decode audio:", error);
+      });
+  }
+}
+
+function playFromBuffer(audioBuffer) {
+  const source = audioCtx.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioCtx.destination);
+  source.start(0);
 }
 
 function expandMap() {
@@ -227,7 +243,7 @@ function expandMap() {
 }
 
 //Constant and variable declarations
-
+const soundCache = {}; //sound cache
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const gameArea = document.getElementById("area");
 const start = document.getElementById("start");
