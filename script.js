@@ -2,7 +2,7 @@
 
 class ScoreManager {
   constructor() {
-    this.scores = [];
+    this.scores = this.loadScores() || [];
   }
 
   addScore(score) {
@@ -11,14 +11,14 @@ class ScoreManager {
   }
 
   saveScores() {
-    localStorage.setItem("scores", this.scores);
+    localStorage.setItem("scores", JSON.stringify(this.scores));
   }
 
   loadScores() {
-    if (!localStorage.scores) {
-      localStorage.scores = [];
+    if (!localStorage.getItem("scores")) {
+      localStorage.setItem("scores", JSON.stringify([]));
     }
-    return localStorage.scores;
+    return JSON.parse(localStorage.getItem("scores"));
   }
 
   sortScores() {
@@ -113,7 +113,6 @@ function random(min, max) {
 }
 
 const collide = (obj1, obj2) => obj1.x === obj2.x;
-
 function focusGameArea() {
   return gameArea.focus();
 }
@@ -139,8 +138,18 @@ function showResults(text) {
   const contents = document.getElementById("content");
   const btnPlayAgain = document.getElementById("btn-play-again");
   const btnStartOver = document.getElementById("btn-start-new");
+  const scoresList = document.getElementById("scores");
   contents.innerHTML = "";
+  scoresList.innerHTML = "";
   contents.innerHTML = text;
+  scoresList.innerHTML = `${
+    sm.loadScores().length === 0
+      ? "No scores recorded so far"
+      : sm
+          .sortScores()
+          .map((value, index) => `<li>In position ${index + 1}: ${value}</li>`)
+          .join("")
+  }`;
   gameOverDialog.showModal();
   btnPlayAgain.addEventListener("click", (e) => {
     gameOverDialog.close();
@@ -163,6 +172,7 @@ function resetGame() {
 
 function isGameOver() {
   if (collide(person, fly)) {
+    sm.addScore(person.score);
     showResults(
       `Game over. You managed to scare the fly away ${person.score} times on difficulty level ${difficulty}.\nClicking \"Play again\" will start a new game with the same settings while clicking "Start over" will reload the page, allowing you to configure the game again.`
     );
@@ -269,6 +279,7 @@ function expandMap() {
 }
 
 //Constant and variable declarations
+const sm = new ScoreManager(); //score manager class
 const soundCache = {}; //sound cache
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const gameArea = document.getElementById("area");
