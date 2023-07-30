@@ -1,5 +1,31 @@
 // Class definitions
 
+class ScoreManager {
+  constructor() {
+    this.scores = [];
+  }
+
+  addScore(score) {
+    this.scores.push(score);
+    this.saveScores();
+  }
+
+  saveScores() {
+    localStorage.setItem("scores", this.scores);
+  }
+
+  loadScores() {
+    if (!localStorage.scores) {
+      localStorage.scores = [];
+    }
+    return localStorage.scores;
+  }
+
+  sortScores() {
+    return this.loadScores().sort((a, b) => b - a);
+  }
+}
+
 class Map {
   constructor() {
     this.tiles = []; //holds all the tiles
